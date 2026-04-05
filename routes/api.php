@@ -497,7 +497,5 @@ Route::middleware('jwt.auth')->group(function () {
     
         Route::get('revenues_reports', 'ReportsApiController@revenues_reports');
         
-        
-        
     });
 });
