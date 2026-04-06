@@ -498,4 +498,15 @@ Route::middleware('jwt.auth')->group(function () {
         Route::get('revenues_reports', 'ReportsApiController@revenues_reports');
         
     });
+
+    Route::prefix('v-mobile')->group(function () {
+    
+        Route::post('register', 'MobileApiController@register');
+        Route::post('login', 'MobileApiController@login');
+        Route::post('checkUser', 'MobileApiController@checkUser');
+        Route::post('activateAccount', 'MobileApiController@activateAccount');
+            
+        
+
+    });
 });

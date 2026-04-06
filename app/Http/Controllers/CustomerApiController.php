@@ -24,8 +24,6 @@ class CustomerApiController extends Controller
     public function add_new_customer(Request $request)
     {
         
-            
-
             $messages = [
                 'name.required' => 'من فضلك أدخل الاسم',
                 'name.string'   => 'الاسم يجب أن يكون نصًا',

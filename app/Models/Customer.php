@@ -4,11 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Notifications\Notifiable;
+use Tymon\JWTAuth\Contracts\JWTSubject;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Models\TaxType;
 use App\Models\ZakahType;
-class Customer extends Model
+class Customer extends Authenticatable implements JWTSubject
 {
-    use HasFactory;
+    use HasFactory, Notifiable,SoftDeletes;
     protected $table = "customers";
     protected $guarded = [];
     
@@ -16,6 +19,28 @@ class Customer extends Model
 
     protected $appends = ['user_name','country_name','identity_name','profile_image_url','front_image_url','back_image_url','request_application_image_url','preview_location_application_image_url','health_checkup_image_url','qualification_image_url','supervisor_qualification_image_url', 'qualification_name','specialization_name','has_tax_file','tax_file_id','tax_balance_details','zakah_balance_details','profile_image_base','zakah_number_id','commercial_name'];
     
+
+    public function getJWTIdentifier()
+    {
+        return $this->getKey();
+    }
+
+    // ✅ مطلوب من JWT
+    public function getJWTCustomClaims()
+    {
+        return [
+            'id' => $this->id,
+            'identity_number' => $this->identity_number,
+            'name' => $this->name,
+            'email' => $this->email,
+            'phone_1' => $this->phone_1,
+            'identity_start_date' => $this->identity_start_date,
+            'identity_start_date' => $this->identity_start_date,
+            'profile_image_url' => $this->profile_image_url,
+            
+        ];
+    }
+
     public function tax_file()
     {
         return $this->hasOne(TaxFile::class,'customer_id');
