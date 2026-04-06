@@ -302,7 +302,7 @@ class MobileApiController extends Controller
         return response()->json([
             'status' => 200,
             'message' => 'success',
-            'data' => $categories,
+            'data' => $data,
         ]);
     }
 }
