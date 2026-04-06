@@ -15,7 +15,8 @@ use Illuminate\Support\Carbon;
 use App\Models\ZakahNumber;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Validator;
-
+use App\Models\Country;
+use App\Models\IdentityType;
 class MobileApiController extends Controller
 {
    
@@ -64,10 +65,24 @@ class MobileApiController extends Controller
             'password' => 'required|digits:8'
         ]);
 
-        // رفع الصور
-        $profile = $request->file('profile_picture')->store('customers', 'public');
-        $front = $request->file('identity_front_image')->store('customers', 'public');
-        $back = $request->file('identity_back_image')->store('customers', 'public');
+      
+            $name = null;
+            if ($file = $request->file('profile_picture')) {
+                $name = time() . $file->getClientOriginalName();
+                $file->move('customers', $name);
+            }
+            
+            $name2 = null;
+            if ($file = $request->file('identity_front_image')) {
+                $name2 = time() . $file->getClientOriginalName();
+                $file->move('customers', $name2);
+            }
+            
+            $name3 = null;
+            if ($file = $request->file('identity_back_image')) {
+                $name3 = time() . $file->getClientOriginalName();
+                $file->move('customers', $name3);
+            }
 
         $customer = Customer::create([
             'name' => $request->name,
@@ -79,9 +94,9 @@ class MobileApiController extends Controller
             'email' => $request->email,
             'identity_type_id' => $request->identity_type_id,
             'country_id' => $request->country_id,
-            'profile_picture' => $profile,
-            'identity_front_image' => $front,
-            'identity_back_image' => $back,
+            'profile_picture' => $name,
+            'identity_front_image' => $name2,
+            'identity_back_image' => $name3,
             'identity_start_date' => $request->identity_start_date,
             'identity_end_date' => $request->identity_end_date,
             'address' => $request->address,
@@ -159,4 +174,43 @@ class MobileApiController extends Controller
         ]);
     }
 
+    public function countries()
+    {
+        $data = Country::latest()->get();
+        $data->transform(function ($data) {
+             return [
+                'id'=> $data->id,
+                'name'=> $data->name,
+                
+             ];
+               
+              
+        });
+        return response()->json([
+                'status' => true,
+                'data' => $data,
+              
+        ]);
+
+    }
+
+    public function identity_types()
+    {
+        $data = IdentityType::latest()->get();
+        $data->transform(function ($data) {
+             return [
+                'id'=> $data->id,
+                'name'=> $data->name,
+                
+             ];
+               
+              
+        });
+        return response()->json([
+                'status' => true,
+                'data' => $data,
+              
+        ]);
+
+    }
 }

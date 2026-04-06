@@ -508,6 +508,9 @@ Route::middleware('jwt.auth')->group(function () {
         Route::post('login', 'MobileApiController@login');
         Route::post('checkUser', 'MobileApiController@checkUser');
         Route::post('activateAccount', 'MobileApiController@activateAccount');
+
+        Route::get('countries', 'MobileApiController@countries');
+        Route::get('identity_types', 'MobileApiController@identity_types');
             
         
 
