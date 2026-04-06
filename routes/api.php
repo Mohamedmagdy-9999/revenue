@@ -499,6 +499,9 @@ Route::middleware('jwt.auth')->group(function () {
         
     });
 
+    
+});
+
     Route::prefix('v-mobile')->group(function () {
     
         Route::post('register', 'MobileApiController@register');
@@ -509,4 +512,3 @@ Route::middleware('jwt.auth')->group(function () {
         
 
     });
-});
