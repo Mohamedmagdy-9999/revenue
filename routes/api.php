@@ -511,6 +511,18 @@ Route::middleware('jwt.auth')->group(function () {
 
         Route::get('countries', 'MobileApiController@countries');
         Route::get('identity_types', 'MobileApiController@identity_types');
+
+            Route::middleware(['auth:api_citizens', 'citizen'])->group(function () {
+
+            
+            Route::post('customer_change_password', 'MobileApiController@customer_change_password');
+            Route::post('delete_customer', 'MobileApiController@delete_customer');
+
+
+                
+            
+                
+            });
             
         
 
