@@ -178,6 +178,7 @@ class MobileApiController extends Controller
     {
         $user = Auth::guard('api_customers')->user();
 
+        
         if (!$user) {
             return response()->json([
                 'status' => false,
