@@ -11,4 +11,9 @@ class ZakahType extends Model
     
     protected $table = "zakah_types";
     protected $guarded = [];
+
+    public function declarations()
+    {
+        return $this->hasMany(ZakahDeclaration::class, 'zakah_type_id');
+    }
 }

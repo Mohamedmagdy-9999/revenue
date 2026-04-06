@@ -20,6 +20,7 @@ use App\Models\IdentityType;
 use App\Models\Category;
 use App\Models\Service;
 use App\Models\TaxType;
+use App\Models\ZakahType;
 class MobileApiController extends Controller
 {
    
@@ -312,6 +313,19 @@ class MobileApiController extends Controller
     {
         $data = TaxType::with(['declarations' => function($q) {
             $q->select('id', 'name', 'tax_type_id'); // مهم جداً include tax_type_id
+        }])->get();
+
+        return response()->json([
+            'status' => 200,
+            'message' => 'success',
+            'data' => $data
+        ]);
+    }
+
+    public function zakah_types()
+    {
+        $data = ZakahType::with(['declarations' => function($q) {
+            $q->select('id', 'name', 'zakah_type_id'); // مهم جداً include tax_type_id
         }])->get();
 
         return response()->json([
