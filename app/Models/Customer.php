@@ -19,7 +19,7 @@ class Customer extends Authenticatable implements JWTSubject
     protected $hidden = ['user','user_id','country','country_id','identity','identity_type_id','qualifications','specializations','tax_file'];
 
     protected $appends = ['user_name','country_name','identity_name','profile_image_url','front_image_url','back_image_url','request_application_image_url','preview_location_application_image_url','health_checkup_image_url','qualification_image_url','supervisor_qualification_image_url', 'qualification_name','specialization_name','has_tax_file','tax_file_id','tax_balance_details','zakah_balance_details','profile_image_base','zakah_number_id','commercial_name'];
-    
+    protected $dates = ['deleted_at'];
 
     public function getJWTIdentifier()
     {
