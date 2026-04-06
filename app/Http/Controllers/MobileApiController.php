@@ -281,11 +281,22 @@ class MobileApiController extends Controller
 
     public function licenses_category()
     {
-        $categories = Category::with(['services' => function ($q) {
-            $q->whereRaw('LENGTH(code) = 3')
-            ->where('active', 1)
-            ->orderBy('code', 'asc');
-        }])->get();
+       $categories = Category::get();
+
+        $data = $categories->map(function ($category) {
+
+            $services = Service::where('category_id', $category->id)
+                ->whereRaw('LENGTH(code) = 3')
+                ->where('active', 1)
+                ->orderBy('code', 'asc')
+                ->get();
+
+            return [
+                'id' => $category->id,
+                'name' => $category->name,
+                'services' => $services,
+            ];
+        });
 
         return response()->json([
             'status' => 200,
