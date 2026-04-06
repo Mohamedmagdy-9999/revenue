@@ -290,6 +290,7 @@ class MobileApiController extends Controller
             ->select('id', 'name', 'category_id', 'code')
             ->get()
             ->groupBy('category_id');
+            
 
         $data = $categories->map(function ($category) use ($services) {
             return [
