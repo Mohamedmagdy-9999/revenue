@@ -11,4 +11,9 @@ class TaxType extends Model
     
     protected $table = "tax_types";
     protected $guarded = [];
+
+    public function declarations()
+    {
+        return $this->hasMany(Declaration::class, 'tax_type_id');
+    }
 }

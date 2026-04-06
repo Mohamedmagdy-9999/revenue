@@ -19,6 +19,7 @@ use App\Models\Country;
 use App\Models\IdentityType;
 use App\Models\Category;
 use App\Models\Service;
+use App\Models\TaxType;
 class MobileApiController extends Controller
 {
    
@@ -290,7 +291,7 @@ class MobileApiController extends Controller
             ->select('id', 'name', 'category_id', 'code')
             ->get()
             ->groupBy('category_id');
-            
+
 
         $data = $categories->map(function ($category) use ($services) {
             return [
@@ -304,6 +305,19 @@ class MobileApiController extends Controller
             'status' => 200,
             'message' => 'success',
             'data' => $data,
+        ]);
+    }
+
+    public function tax_types()
+    {
+        $data = TaxType::with(['declarations' => function($q) {
+            $q->select('id', 'name'); // هنا تحدد الأعمدة اللي عايزها بس
+        }])->get();
+
+        return response()->json([
+            'status' => 200,
+            'message' => 'success',
+            'data' => $data
         ]);
     }
 }

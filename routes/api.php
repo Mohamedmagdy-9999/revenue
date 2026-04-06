@@ -520,6 +520,8 @@ Route::middleware('jwt.auth')->group(function () {
 
                 Route::get('licenses_category', 'MobileApiController@licenses_category');
 
+                Route::get('tax_types', 'MobileApiController@tax_types');
+
                 
             
                 
