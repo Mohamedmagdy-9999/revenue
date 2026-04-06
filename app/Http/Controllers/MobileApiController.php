@@ -311,7 +311,7 @@ class MobileApiController extends Controller
     public function tax_types()
     {
         $data = TaxType::with(['declarations' => function($q) {
-            $q->select('id', 'name'); // هنا تحدد الأعمدة اللي عايزها بس
+            $q->select('id', 'name', 'tax_type_id'); // مهم جداً include tax_type_id
         }])->get();
 
         return response()->json([
