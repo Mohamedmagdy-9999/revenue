@@ -17,6 +17,7 @@ use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Country;
 use App\Models\IdentityType;
+use App\Models\Category;
 class MobileApiController extends Controller
 {
    
@@ -178,7 +179,7 @@ class MobileApiController extends Controller
     {
         $user = Auth::guard('api_customers')->user();
 
-        
+
         if (!$user) {
             return response()->json([
                 'status' => false,
@@ -276,5 +277,20 @@ class MobileApiController extends Controller
               
         ]);
 
+    }
+
+    public function licenses_category()
+    {
+        $categories = Category::with(['services' => function ($q) {
+            $q->whereRaw('LENGTH(code) = 3')
+            ->where('active', 1)
+            ->orderBy('code', 'asc');
+        }])->get();
+
+        return response()->json([
+            'status' => 200,
+            'message' => 'success',
+            'data' => $categories,
+        ]);
     }
 }

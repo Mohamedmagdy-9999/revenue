@@ -518,6 +518,7 @@ Route::middleware('jwt.auth')->group(function () {
                 Route::post('customer_change_password', 'MobileApiController@customer_change_password');
                 Route::post('delete_customer', 'MobileApiController@delete_customer');
 
+                Route::get('licenses_category', 'MobileApiController@licenses_category');
 
                 
             
