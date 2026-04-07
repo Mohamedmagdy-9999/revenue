@@ -152,7 +152,7 @@ class MobileApiController extends Controller
     {
         $request->validate([
             'identity_number' => 'required',
-            'password' => 'required|digits:8'
+            'password' => 'required'
         ]);
 
         $customer = Customer::where('identity_number', $request->identity_number)->first();
