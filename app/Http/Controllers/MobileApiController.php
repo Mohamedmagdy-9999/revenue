@@ -38,7 +38,7 @@ class MobileApiController extends Controller
             ]);
         }
 
-        if (is_null($customer->pin)) {
+        if (is_null($customer->password)) {
             return response()->json([
                 'status' => 'need_activation'
             ]);
