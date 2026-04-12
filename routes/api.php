@@ -526,7 +526,7 @@ Route::middleware('jwt.auth')->group(function () {
 
                 Route::post('request_license', 'MobileApiController@request_license');
             
-                
+            
             });
             
         
