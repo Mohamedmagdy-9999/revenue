@@ -21,6 +21,7 @@ use App\Models\Category;
 use App\Models\Service;
 use App\Models\TaxType;
 use App\Models\ZakahType;
+use App\Models\RentalType;
 class MobileApiController extends Controller
 {
    
@@ -337,6 +338,17 @@ class MobileApiController extends Controller
         ]);
     }
 
+    public function rental_types()
+    {
+        $data = RentalType::select('id','name')->get();
+
+        return response()->json([
+            'status' => 200,
+            'message' => 'success',
+            'data' => $data
+        ]);
+    }
+
 
     public function request_license(Request $request)
     {
@@ -541,26 +553,26 @@ class MobileApiController extends Controller
             
             
            
-            $applicationExists = Application::where('number', $request->application_number)->where('category_id',$request->category_id)->exists();
+            // $applicationExists = Application::where('number', $request->application_number)->where('category_id',$request->category_id)->exists();
             
-            if (!$applicationExists) {
-                return response()->json([
-                    'status' => 422,
-                    'message' => 'رقم الاستمارة غير موجود في النظام.',
-                    'data' => [],
-                ], 422);
-            }
+            // if (!$applicationExists) {
+            //     return response()->json([
+            //         'status' => 422,
+            //         'message' => 'رقم الاستمارة غير موجود في النظام.',
+            //         'data' => [],
+            //     ], 422);
+            // }
             
             // 2) التأكد أن رقم الاستمارة لم يُستخدم من قبل
-            $usedBefore = BranchRenewal::where('application_number', $request->application_number)->exists();
+            // $usedBefore = BranchRenewal::where('application_number', $request->application_number)->exists();
             
-            if ($usedBefore) {
-                return response()->json([
-                    'status' => 422,
-                    'message' => 'رقم الاستمارة تم استخدامه من قبل.',
-                    'data' => [],
-                ], 422);
-            }
+            // if ($usedBefore) {
+            //     return response()->json([
+            //         'status' => 422,
+            //         'message' => 'رقم الاستمارة تم استخدامه من قبل.',
+            //         'data' => [],
+            //     ], 422);
+            // }
 
             
             
@@ -597,7 +609,7 @@ class MobileApiController extends Controller
             
 
             $license = License::create([
-                'customer_id' => $request->customer_id,
+                'customer_id' => Auth::guard('api_customers')->user()->id,
                 'category_id' => $request->category_id,
                 'sub_category_id' => $request->sub_category_id,
                 'email' => $request->email,
@@ -625,14 +637,15 @@ class MobileApiController extends Controller
             $renewal->type =  "جديد";
             $renewal->depart = "المراجعة";
             $renewal->coming_from = "الادخال";
-            $renewal->user_id =  auth()->user()->id;
+            // $renewal->user_id =  auth()->user()->id;
             $renewal->license_branch_id =  $branch->id;
             $renewal->owner_id = $request->owner_id;
-           if ($request->has('owner_license') && $request->boolean('owner_license')) {
-                $renewal->supervisor_id = $request->customer_id;
-            } elseif ($request->has('supervisor_id')) {
-                $renewal->supervisor_id = $request->supervisor_id;
-            }
+            $renewal->activity_name =  $request->activity_name;
+        //    if ($request->has('owner_license') && $request->boolean('owner_license')) {
+        //         $renewal->supervisor_id = $request->customer_id;
+        //     } elseif ($request->has('supervisor_id')) {
+        //         $renewal->supervisor_id = $request->supervisor_id;
+        //     }
 
             
             
@@ -651,206 +664,206 @@ class MobileApiController extends Controller
             $renewal->shop_back_image = $shop_back_image;
             $renewal->panel_area = $request->panel_area;
             $renewal->panel_type_id = $request->panel_type_id;
-            $renewal->status_id = 1;
-            $renewal->application_number = $request->application_number;
-            $renewal->application_image = $application_image;
+            $renewal->status_id = 3;
+            // $renewal->application_number = $request->application_number;
+            // $renewal->application_image = $application_image;
             $renewal->start_date = $start_date;
             $renewal->end_date = $end_date;
-            $renewal->penalty = $request->penalty;
-            $renewal->notes = $request->notes;
-            $renewal->employee_number = $request->employee_number;
-            $renewal->suspension_form_image = $suspension_form_image;
-            $renewal->beds_number = $request->beds_number;
-            $renewal->staff_number = $request->staff_number;
-            $renewal->medical_staff_number = $request->medical_staff_number;
-            $renewal->facility_plan_image = $facility_plan_image;
-            $renewal->license_main_facility_image = $license_main_facility_image;
-           $renewal->license_main_facility_image = $license_main_facility_image;
-           $renewal->facility_licenses_image = $facility_licenses_image;
-           $renewal->first_review_report_image = $first_review_report_image;
-           $renewal->second_review_report_image = $second_review_report_image;
-           $renewal->facility_name = $request->facility_name;
-           $renewal->pharmacy_area = $request->pharmacy_area;
-           $renewal->employee_contract = $employee_contract;
-           $renewal->temporary = $request->temporary;
-           $renewal->notes = $request->notes;
+        //     $renewal->penalty = $request->penalty;
+        //     $renewal->notes = $request->notes;
+        //     $renewal->employee_number = $request->employee_number;
+        //     $renewal->suspension_form_image = $suspension_form_image;
+        //     $renewal->beds_number = $request->beds_number;
+        //     $renewal->staff_number = $request->staff_number;
+        //     $renewal->medical_staff_number = $request->medical_staff_number;
+        //     $renewal->facility_plan_image = $facility_plan_image;
+        //     $renewal->license_main_facility_image = $license_main_facility_image;
+        //    $renewal->license_main_facility_image = $license_main_facility_image;
+        //    $renewal->facility_licenses_image = $facility_licenses_image;
+        //    $renewal->first_review_report_image = $first_review_report_image;
+        //    $renewal->second_review_report_image = $second_review_report_image;
+        //    $renewal->facility_name = $request->facility_name;
+        //    $renewal->pharmacy_area = $request->pharmacy_area;
+        //    $renewal->employee_contract = $employee_contract;
+        //    $renewal->temporary = $request->temporary;
+        //    $renewal->notes = $request->notes;
            $renewal->service_type_id = $request->service_type_id;
            $renewal->serv_code = $request->serv_code;
            
             $renewal->save();
             
-            foreach($request->service_id as  $service)
-            {
-                $ser = Service::where('id',$service)->first();
-                $renewal_service = new BranchRenewalServices();
-                $renewal_service->service_id = $service;
-                $renewal_service->branch_renewal_id = $renewal->id;
-                $renewal_service->value = $ser->value;
-                $renewal_service->save();
+            // foreach($request->service_id as  $service)
+            // {
+            //     $ser = Service::where('id',$service)->first();
+            //     $renewal_service = new BranchRenewalServices();
+            //     $renewal_service->service_id = $service;
+            //     $renewal_service->branch_renewal_id = $renewal->id;
+            //     $renewal_service->value = $ser->value;
+            //     $renewal_service->save();
                 
               
                 
-            }
+            // }
             
-            $brserv = $request->service_id;
+            // $brserv = $request->service_id;
 
-            /*
-            |--------------------------------------------------------------------------
-            | 1️⃣ الرسوم الأساسية (rsom)
-            |--------------------------------------------------------------------------
-            */
-            $rsom = 0;
+            // /*
+            // |--------------------------------------------------------------------------
+            // | 1️⃣ الرسوم الأساسية (rsom)
+            // |--------------------------------------------------------------------------
+            // */
+            // $rsom = 0;
             
-            if ((int)$renewal->service_type_id === 62 && $renewal->type === 'ايقاف فرع') {
+            // if ((int)$renewal->service_type_id === 62 && $renewal->type === 'ايقاف فرع') {
             
-                $count = count($brserv);
-                $rsom  = $count * 260;
+            //     $count = count($brserv);
+            //     $rsom  = $count * 260;
             
-            } else {
+            // } else {
             
-                $rsom = ServicePrice::whereIn('service_id', $brserv)
-                    ->where('service_type_id', $renewal->service_type_id)
-                    ->sum('price');
-            }
+            //     $rsom = ServicePrice::whereIn('service_id', $brserv)
+            //         ->where('service_type_id', $renewal->service_type_id)
+            //         ->sum('price');
+            // }
             
-            /*
-            |--------------------------------------------------------------------------
-            | 2️⃣ رسوم الدعاية والإعلان
-            |--------------------------------------------------------------------------
-            */
-            $d3ayawe3lan = 0;
+            // /*
+            // |--------------------------------------------------------------------------
+            // | 2️⃣ رسوم الدعاية والإعلان
+            // |--------------------------------------------------------------------------
+            // */
+            // $d3ayawe3lan = 0;
             
-            if (!is_null($renewal->panel_area)) {
+            // if (!is_null($renewal->panel_area)) {
             
-                if ($renewal->panel_type_id == 1) {
-                          $pricePerMeter = 800;
-                } elseif ($renewal->panel_type_id == 2) {
-                          $pricePerMeter = 1000;
-                } else {
-                    $pricePerMeter = 0; // أو أي قيمة افتراضية تحبها
-                }
-                $d3ayawe3lan   = $renewal->panel_area * $pricePerMeter;
-            }
+            //     if ($renewal->panel_type_id == 1) {
+            //               $pricePerMeter = 800;
+            //     } elseif ($renewal->panel_type_id == 2) {
+            //               $pricePerMeter = 1000;
+            //     } else {
+            //         $pricePerMeter = 0; // أو أي قيمة افتراضية تحبها
+            //     }
+            //     $d3ayawe3lan   = $renewal->panel_area * $pricePerMeter;
+            // }
             
-            /*
-            |--------------------------------------------------------------------------
-            | 3️⃣ رسوم العوائق
-            |--------------------------------------------------------------------------
-            */
-            $obstacleMeterPrice = Price::where('name', 'رسوم عوائق')->value('value') ?? 0;
-            $rsom3waek = ($renewal->obstacle_space ?? 0) * $obstacleMeterPrice;
+            // /*
+            // |--------------------------------------------------------------------------
+            // | 3️⃣ رسوم العوائق
+            // |--------------------------------------------------------------------------
+            // */
+            // $obstacleMeterPrice = Price::where('name', 'رسوم عوائق')->value('value') ?? 0;
+            // $rsom3waek = ($renewal->obstacle_space ?? 0) * $obstacleMeterPrice;
             
-            /*
-            |--------------------------------------------------------------------------
-            | 4️⃣ رسوم الفتحات
-            |--------------------------------------------------------------------------
-            */
-            $rsomfat7at = 0;
-            $fat7atCount = (int) $renewal->number_of_doors;
+            // /*
+            // |--------------------------------------------------------------------------
+            // | 4️⃣ رسوم الفتحات
+            // |--------------------------------------------------------------------------
+            // */
+            // $rsomfat7at = 0;
+            // $fat7atCount = (int) $renewal->number_of_doors;
             
-            if ($fat7atCount > 2) {
+            // if ($fat7atCount > 2) {
             
-                $servicesPrices = ServicePrice::whereIn('service_id', $brserv)
-                    ->where('service_type_id', $renewal->service_type_id)
-                    ->pluck('price');
+            //     $servicesPrices = ServicePrice::whereIn('service_id', $brserv)
+            //         ->where('service_type_id', $renewal->service_type_id)
+            //         ->pluck('price');
             
-                foreach ($servicesPrices as $price) {
-                    $rsomfat7at += ($price * 0.20);
-                }
-            }
+            //     foreach ($servicesPrices as $price) {
+            //         $rsomfat7at += ($price * 0.20);
+            //     }
+            // }
             
-            /*
-            |--------------------------------------------------------------------------
-            | 5️⃣ الغرامات
-            |--------------------------------------------------------------------------
-            */
-            $rsom8rama = 0;
+            // /*
+            // |--------------------------------------------------------------------------
+            // | 5️⃣ الغرامات
+            // |--------------------------------------------------------------------------
+            // */
+            // $rsom8rama = 0;
             
-            $penaltyPrice = ServicePrice::whereIn('service_id', $brserv)
-                ->where('service_type_id', 66)
-                ->value('price') ?? 0;
+            // $penaltyPrice = ServicePrice::whereIn('service_id', $brserv)
+            //     ->where('service_type_id', 66)
+            //     ->value('price') ?? 0;
             
-            if ($penaltyPrice && $renewal->end_date) {
+            // if ($penaltyPrice && $renewal->end_date) {
             
-                $expiryDate = Carbon::parse($renewal->end_date);
-                $penaltyStartDate = Carbon::create($expiryDate->year, 3, 1);
+            //     $expiryDate = Carbon::parse($renewal->end_date);
+            //     $penaltyStartDate = Carbon::create($expiryDate->year, 3, 1);
             
-                if (Carbon::today()->gt($penaltyStartDate)) {
+            //     if (Carbon::today()->gt($penaltyStartDate)) {
             
-                    $yearsLate = $penaltyStartDate->diffInYears(now()) + 1;
-                    $rsom8rama = $yearsLate * $penaltyPrice * count($brserv);
-                }
-            }
+            //         $yearsLate = $penaltyStartDate->diffInYears(now()) + 1;
+            //         $rsom8rama = $yearsLate * $penaltyPrice * count($brserv);
+            //     }
+            // }
             
-            /*
-            |--------------------------------------------------------------------------
-            | 6️⃣ الإجمالي
-            |--------------------------------------------------------------------------
-            */
-            $elegmalyelrsom =
-                $rsom +
-                $d3ayawe3lan +
-                $rsom3waek +
-                $rsomfat7at +
-                $rsom8rama;
+            // /*
+            // |--------------------------------------------------------------------------
+            // | 6️⃣ الإجمالي
+            // |--------------------------------------------------------------------------
+            // */
+            // $elegmalyelrsom =
+            //     $rsom +
+            //     $d3ayawe3lan +
+            //     $rsom3waek +
+            //     $rsomfat7at +
+            //     $rsom8rama;
 
-                BranchRenewalFinance::create([
-                    'branch_renewal_id' => $renewal->id,
+            //     BranchRenewalFinance::create([
+            //         'branch_renewal_id' => $renewal->id,
                 
-                    'rsom'         => $rsom,
-                    'mota5rat'     => 0,
-                    'rsom3waek'    => $rsom3waek,
-                    'd3ayawe3lan'  => $d3ayawe3lan,
-                    'rsomfat7at'   => $rsomfat7at,
-                    'rsom8rama'    => $rsom8rama,
-                    'total'        => $elegmalyelrsom,
-                ]);
+            //         'rsom'         => $rsom,
+            //         'mota5rat'     => 0,
+            //         'rsom3waek'    => $rsom3waek,
+            //         'd3ayawe3lan'  => $d3ayawe3lan,
+            //         'rsomfat7at'   => $rsomfat7at,
+            //         'rsom8rama'    => $rsom8rama,
+            //         'total'        => $elegmalyelrsom,
+            //     ]);
                 
-                if($renewal->service_type_id == 62 OR $renewal->service_type_id == 63)
-                {
-                    $rsomta7sen = ServicePrice::whereIn('service_id',$brserv)->where('service_type_id',67)->sum('price');
-                }else{
-                    $rsomta7sen = ServicePrice::whereIn('service_id',$brserv)->where('service_type_id',68)->sum('price');
-                }
+            //     if($renewal->service_type_id == 62 OR $renewal->service_type_id == 63)
+            //     {
+            //         $rsomta7sen = ServicePrice::whereIn('service_id',$brserv)->where('service_type_id',67)->sum('price');
+            //     }else{
+            //         $rsomta7sen = ServicePrice::whereIn('service_id',$brserv)->where('service_type_id',68)->sum('price');
+            //     }
                 
-                if($renewal->service_type_id == 62 OR $renewal->service_type_id == 63)
-                {
-                    $rsomnzafa = ServicePrice::whereIn('service_id',$brserv)->where('service_type_id',69)->sum('price');
-                }else{
-                    $rsomnzafa = ServicePrice::whereIn('service_id',$brserv)->where('service_type_id',70)->sum('price');
-                }
+            //     if($renewal->service_type_id == 62 OR $renewal->service_type_id == 63)
+            //     {
+            //         $rsomnzafa = ServicePrice::whereIn('service_id',$brserv)->where('service_type_id',69)->sum('price');
+            //     }else{
+            //         $rsomnzafa = ServicePrice::whereIn('service_id',$brserv)->where('service_type_id',70)->sum('price');
+            //     }
                 
-                $matbo3at = 1200;
+            //     $matbo3at = 1200;
                 
-                $elegmaly =
-                $rsomta7sen +
-                $rsomnzafa +
-                $matbo3at;
+            //     $elegmaly =
+            //     $rsomta7sen +
+            //     $rsomnzafa +
+            //     $matbo3at;
                 
                 
-                BranchRenewalNzafa::create([
-                    'branch_renewal_id' => $renewal->id,
-                    'rsomta7sen' => $rsomta7sen,
-                    'rsomnzafa' => $rsomnzafa,
-                    'matbo3at' => $matbo3at,
-                    'total' => $elegmaly,
+            //     BranchRenewalNzafa::create([
+            //         'branch_renewal_id' => $renewal->id,
+            //         'rsomta7sen' => $rsomta7sen,
+            //         'rsomnzafa' => $rsomnzafa,
+            //         'matbo3at' => $matbo3at,
+            //         'total' => $elegmaly,
                 
                     
-                ]);
+            //     ]);
 
             
             
-            $log = new BranchRenewalLog();
-            $log->user_id = auth('api')->user()->id;
-            $log->branch_renewal_id = $renewal->id;
-            $log->department_id = auth('api')->user()->department_id;
-            $log->details = "اضافة رخصة جديدة";
-            $log->notes = $renewal->notes;
-            $log->save();
+            // $log = new BranchRenewalLog();
+            // $log->user_id = auth('api')->user()->id;
+            // $log->branch_renewal_id = $renewal->id;
+            // $log->department_id = auth('api')->user()->department_id;
+            // $log->details = "اضافة رخصة جديدة";
+            // $log->notes = $renewal->notes;
+            // $log->save();
             
-            $renewal->update([
-                'notes' => null,
-            ]);
+            // $renewal->update([
+            //     'notes' => null,
+            // ]);
             
             
             

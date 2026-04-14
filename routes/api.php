@@ -523,6 +523,7 @@ Route::middleware('jwt.auth')->group(function () {
                 Route::get('tax_types', 'MobileApiController@tax_types');
 
                 Route::get('zakah_types', 'MobileApiController@zakah_types');
+                Route::get('rental_types', 'MobileApiController@rental_types');
 
                 Route::post('request_license', 'MobileApiController@request_license');
             
