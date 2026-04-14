@@ -22,6 +22,7 @@ use App\Models\Service;
 use App\Models\TaxType;
 use App\Models\ZakahType;
 use App\Models\RentalType;
+use App\Models\ServiceType;
 class MobileApiController extends Controller
 {
    
@@ -341,6 +342,17 @@ class MobileApiController extends Controller
     public function rental_types()
     {
         $data = RentalType::select('id','name')->get();
+
+        return response()->json([
+            'status' => 200,
+            'message' => 'success',
+            'data' => $data
+        ]);
+    }
+
+    public function service_types()
+    {
+        $data = ServiceType::select('id','name')->get();
 
         return response()->json([
             'status' => 200,
